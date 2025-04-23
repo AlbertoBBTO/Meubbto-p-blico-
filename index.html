@@ -1,17 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>My Dona</title>
+  <title>Quer namorar comigo?</title>
   <style>
     body {
       margin: 0;
-      background-color: white;
+      padding: 0;
       height: 100vh;
+      background-color: #fff0f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Arial', sans-serif;
+    }
+    .container {
+      text-align: center;
+      background: #ffe4f0;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h1 {
+      font-size: 2em;
+      color: #c71585;
+      margin-bottom: 30px;
+    }
+    .btn {
+      background-color: #ff69b4;
+      border: none;
+      color: white;
+      padding: 15px 30px;
+      margin: 10px;
+      border-radius: 10px;
+      font-size: 1.2em;
       cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .btn:hover {
+      background-color: #ff85c1;
     }
   </style>
 </head>
-<body onclick="alert('My dona')">
+<body>
+  <div class="container">
+    <h1>Quer namorar comigo 🫦😏?</h1>
+    <button class="btn" onclick="resposta()">Sim</button>
+    <button class="btn" onclick="resposta()">Sim</button>
+  </div>
+
+  <script>
+    function resposta() {
+      alert("Agora é oficial, hein!");
+    }
+  </script>
 </body>
 </html>
