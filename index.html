@@ -1,58 +1,73 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <title>Quer namorar comigo?</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      background-color: #fff0f5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: 'Arial', sans-serif;
-    }
-    .container {
-      text-align: center;
-      background: #ffe4f0;
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    h1 {
-      font-size: 2em;
-      color: #c71585;
-      margin-bottom: 30px;
-    }
-    .btn {
-      background-color: #ff69b4;
-      border: none;
-      color: white;
-      padding: 15px 30px;
-      margin: 10px;
-      border-radius: 10px;
-      font-size: 1.2em;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    .btn:hover {
-      background-color: #ff85c1;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Quer namorar comigo 🫦😏?</h1>
-    <button class="btn" onclick="resposta()">Sim</button>
-    <button class="btn" onclick="resposta()">Sim</button>
-  </div>
+import { useState, useEffect } from "react"; import { Button } from "@/components/ui/button"; import { Textarea } from "@/components/ui/textarea"; import { Input } from "@/components/ui/input"; import { Card, CardContent } from "@/components/ui/card"; import jsPDF from "jspdf";
 
-  <script>
-    function resposta() {
-      alert("Agora é oficial, hein!");
-    }
-  </script>
-</body>
-</html>
+export default function StoryEditor() { const [stories, setStories] = useState([]); const [title, setTitle] = useState(""); const [content, setContent] = useState(""); const [darkMode, setDarkMode] = useState(false);
+
+useEffect(() => { const storedStories = localStorage.getItem("stories"); if (storedStories) { setStories(JSON.parse(storedStories)); } const storedDarkMode = localStorage.getItem("darkMode") === "true"; setDarkMode(storedDarkMode); }, []);
+
+useEffect(() => { localStorage.setItem("stories", JSON.stringify(stories)); }, [stories]);
+
+useEffect(() => { localStorage.setItem("darkMode", darkMode); }, [darkMode]);
+
+const handleSave = () => { if (title.trim() && content.trim()) { const newStory = { title, content }; setStories([newStory, ...stories]); setTitle(""); setContent(""); } };
+
+const handleDelete = (indexToDelete) => { const updatedStories = stories.filter((_, index) => index !== indexToDelete); setStories(updatedStories); };
+
+const handleExportPDF = (story) => { const doc = new jsPDF(); doc.setFontSize(16); doc.text(story.title, 10, 20); doc.setFontSize(12); doc.text(story.content, 10, 30, { maxWidth: 180 }); doc.save(${story.title}.pdf); };
+
+const countWords = (text) => { return text.trim() === "" ? 0 : text.trim().split(/\s+/).length; };
+
+const CatReaction = ({ wordCount }) => { if (wordCount < 50) return <span className="ml-1">🐱 Está só começando!</span>; if (wordCount < 150) return <span className="ml-1">🐈 Está ficando interessante!</span>; if (wordCount < 300) return <span className="ml-1">😺 Gato curioso gostou!</span>; return <span className="ml-1">😻 Uau, história digna de um felino escritor!</span>; };
+
+return ( <div className={darkMode ? "bg-gray-900 text-white min-h-screen p-6" : "bg-gray-100 text-black min-h-screen p-6"}> <div className="max-w-3xl mx-auto"> <div className="flex justify-between items-center mb-6"> <h1 className="text-3xl font-bold">Escreva sua História</h1> <Button onClick={() => setDarkMode(!darkMode)}> {darkMode ? "Modo Claro" : "Modo Escuro"} </Button> </div>
+
+<div className="mb-4">
+      <Input
+        placeholder="Título da história"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
+    </div>
+
+    <div className="mb-2">
+      <Textarea
+        placeholder="Digite sua história aqui..."
+        rows={8}
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+      />
+    </div>
+    <p className="text-sm mb-4">
+      Palavras: {countWords(content)} <CatReaction wordCount={countWords(content)} />
+    </p>
+
+    <Button onClick={handleSave}>Salvar História</Button>
+
+    <div className="mt-8 space-y-4">
+      {stories.map((story, index) => (
+        <Card key={index} className={darkMode ? "bg-gray-800 text-white shadow p-4" : "bg-white text-black shadow p-4"}>
+          <CardContent>
+            <div className="flex justify-between items-start">
+              <div className="w-full">
+                <h2 className="text-xl font-semibold mb-2">{story.title}</h2>
+                <p className="whitespace-pre-wrap mb-2">{story.content}</p>
+                <p className="text-sm mb-4">
+                  Palavras: {countWords(story.content)} <CatReaction wordCount={countWords(story.content)} />
+                </p>
+                <div className="flex gap-2">
+                  <Button onClick={() => handleExportPDF(story)}>Exportar PDF</Button>
+                  <Button variant="destructive" onClick={() => handleDelete(index)}>
+                    Excluir
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  </div>
+</div>
+
+); }
+
+        
