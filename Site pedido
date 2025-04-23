@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pergunta Especial</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="blank-screen"></div>
+    
+    <div id="question-container" class="hidden">
+        <h1>Você quer sair comigo?</h1>
+        <div class="buttons">
+            <button id="yes-btn">Sim</button>
+            <button id="no-btn">Não</button>
+        </div>
+    </div>
+    
+    <div id="response-container" class="hidden">
+        <h1 id="response-text"></h1>
+        <button id="reset-btn">Voltar</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
